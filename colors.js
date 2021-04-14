@@ -1,0 +1,6 @@
+let groundColor = '#0a3d62'
+let alienColor = '#6ab04c'
+let slingShotColor = '#cc8e35'
+let starColor = '#fffa65'
+let glassColor = '#74b9ff'
+let shotColor = '#754a00'
