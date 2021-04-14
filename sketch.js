@@ -18,6 +18,12 @@ let shipY = 0;
 let shipSpeed = 0.3;
 let accel = 0.001;
 let accel_2 = 0.0005;
+let goRed = true;
+let refugees = [];
+
+function preload() {
+  myFont = loadFont('./BMEULJIROTTF.ttf');
+}
 
 function setup() {
   createCanvas(800, 400);
@@ -29,6 +35,12 @@ function setup() {
     fill(starColor);
     ellipse(random(0,400), random(0,180), 1,1)
     pop();
+  }
+
+  //배경 외계인들 만들기
+
+  for(let i=0; i<20; i++) {
+    refugees.push([random(0,400), random(0,400), random(-90,90), random(0.5,0.8), false]);
   }
 }
 
@@ -42,10 +54,14 @@ function draw() {
   //section 구분선
   line(400,0,400,400);
 
-  //오른쪽 배경
-  drawNightSky(400,400,800);
 
   //section 1
+  refugees.forEach(function(item){
+      push();
+      translate(-200,-200);
+      drawAilen(item[0],item[1],item[2],item[3], item[4]);
+      pop();
+  })
 
   //새총 틀 그리기
   push();
@@ -57,14 +73,15 @@ function draw() {
   line(200,180,200,300);
   arc(200,130,200,100,0,180);
   pop(); 
-
+  
+  //오른쪽 배경
+  drawNightSky(400,400,800);
+  
   operateShot();
 
   // section 2
 
-  //section 2 배경
-
-  
+  //section 2 배경 
 
   //우주선 
   if (launched) {
@@ -76,19 +93,33 @@ function draw() {
     shipSpeed += accel;
     accel += accel_2;
     pop();
-    
+
+    if(shipY > 250){
+      push();
+      background(115, 115, 115,150);
+      textAlign(CENTER);
+      fill(255);
+      textFont(myFont);
+      textSize(25);
+      text(rescuedAliens.length + "명의 외계 친구들이 무사히 집으로 돌아갔어요!", 400,200);
+      textSize(15);
+      text("다시 하려면 R키를 누르세요", 400,300);
+      pop();
+    }
   } else {
-    if (mouseIsPressed) {
+    if (mouseIsPressed && dist(mouseX,mouseY, 600,287) <= 7) {
+              
       launchColor += 3;
+     
       drawSpaceShip();
-      if(launchColor > 255) {
+      if(launchColor > 300) {
         launched = true;
       }
     } else {
       launchColor = 66;
       drawSpaceShip();
     }
-  }  
+  }
 }
 
 function drawNightSky(yEnd, xStart,xEnd) {  
@@ -195,7 +226,12 @@ function drawSpaceShip() {
     fill(116, 185, 255,50);
     arc(0,0,220,350,180,360);
     noStroke();
-    fill(launchColor, 155, 245,127);
+
+    let buttonTrans = 127;    
+    if(dist(mouseX,mouseY, 600,287) <= 7){
+      buttonTrans = 230;
+    } 
+    fill(launchColor, 155, 245,buttonTrans);
     ellipse(0,37,14,14);
     pop();
 }
@@ -346,8 +382,33 @@ function mousePressed() {
   navigator.clipboard.writeText(Math.round(mouseX) + ", " + Math.round(mouseY) + ", ");
 }
 
+function reInit() {
+  score=0;
+  stage =0;
+  clickedX = 0;
+  clickedY = 0;
+  y = 150;
+  s = 0.5;
+  startX = 200;
+  startY = 190;
+  startS = 0.5;
+  rectStartY = 0;
+  onTarget = false;
+  rescuedAliens = [];
+  rightStartY = 400;
+  setSeed = 0;
+  launchColor = 66;
+  launched = false;
+  shipY = 0;
+  shipSpeed = 0.3;
+  accel = 0.001;
+  accel_2 = 0.0005;
+  goRed = true;
+}
+
 function keyPressed() {
   if (key == 'r') {
     stage = 0;
-  }
+    reInit();
+  } 
 }
