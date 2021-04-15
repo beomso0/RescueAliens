@@ -22,6 +22,7 @@ let goRed = true;
 let refugees = [];
 let stars_1 = [];
 let stars_2 = [];
+let lightA = 130;
 
 function preload() {
   myFont = loadFont('./BMEULJIROTTF.ttf');
@@ -108,6 +109,7 @@ function draw() {
     shipY += shipSpeed;
     shipSpeed += accel;
     accel += accel_2;
+    lightA -= 4;
     pop();
 
     if(shipY > 250){
@@ -135,7 +137,7 @@ function draw() {
       launchColor = 66;
       drawSpaceShip();
     }
-  }
+  }  
 }
 
 //배경 하늘 그리기
@@ -251,8 +253,14 @@ function drawSpaceShip() {
       buttonTrans = 230;
     } 
     fill(launchColor, 155, 245,buttonTrans);
-    ellipse(0,37,14,14);
+    ellipse(0,37,14,14);   
     pop();
+
+    //우주선 아래 불빛
+    
+    noStroke();
+    fill(241, 255, 117,lightA);
+    arc(600,302, 800,180,30,150);
 }
 
 // 새총 발사 동작
@@ -423,6 +431,7 @@ function reInit() {
   accel = 0.001;
   accel_2 = 0.0005;
   goRed = true;
+  lightA = 130;
 }
 
 // 초기화 이벤트 리스너
