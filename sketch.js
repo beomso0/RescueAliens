@@ -20,42 +20,48 @@ let accel = 0.001;
 let accel_2 = 0.0005;
 let goRed = true;
 let refugees = [];
+let stars_1 = [];
+let stars_2 = [];
 
 function preload() {
   myFont = loadFont('./BMEULJIROTTF.ttf');
 }
 
 function setup() {
-  createCanvas(800, 400);
+  //캔버스
+  createCanvas(800, 400); 
 
-  //별 그리기
-  for (let n = 1; n<150; n++) {
-    push();
-    noStroke();
-    fill(starColor);
-    ellipse(random(0,400), random(0,180), 1,1)
-    pop();
-  }
-
-  //배경 외계인들 만들기
-
+  //배경 외계인들 array 만들기
   for(let i=0; i<20; i++) {
     refugees.push([random(0,400), random(0,400), random(-90,90), random(0.5,0.8), false]);
   }
+
+  //배경 별 array 만들기
+  for(let n=0; n<150; n++) {
+    stars_1.push([random(0,400), random(0,180),1]);
+    stars_2.push([random(400,800), random(0,400),1]);
+  }
 }
 
-function draw() {
-  
-  
-  ///하늘과 땅 그리기
-  drawNightSky(250,0,400);
-  fill(groundColor);
-  ellipse(200, 400, 800, 400);
-  //section 구분선
-  line(400,0,400,400);
-
+function draw() {  
 
   //section 1
+  
+  ///하늘과 땅 그리기
+  drawNightSky(250,0,400);  
+  fill(groundColor);
+  ellipse(200, 400, 800, 400);
+
+  //section1 별 그리기
+  stars_1.forEach(function(item) {
+    push();
+    noStroke();
+    fill(241, 255, 117);
+    circle(item[0],item[1],item[2]);
+    pop();
+  })
+
+  //배경 외계인 그리기
   refugees.forEach(function(item){
       push();
       translate(-200,-200);
@@ -76,14 +82,24 @@ function draw() {
   
   //오른쪽 배경
   drawNightSky(400,400,800);
+
+  //section2 별 그리기
+  stars_2.forEach(function(item) {
+    push();
+    noStroke();
+    fill(241, 255, 117);
+    circle(item[0],item[1],item[2]);
+    pop();
+  })
   
+  //새총 동작
   operateShot();
 
   // section 2
 
   //section 2 배경 
 
-  //우주선 
+  //우주선 동작
   if (launched) {
     push();
     launchColor = 255;
@@ -122,6 +138,7 @@ function draw() {
   }
 }
 
+//배경 하늘 그리기
 function drawNightSky(yEnd, xStart,xEnd) {  
   push();
   noFill();
@@ -138,6 +155,7 @@ function drawNightSky(yEnd, xStart,xEnd) {
   pop();
 }
 
+//외계인 개체 그리기
 function drawAilen(x = 0, y = 0, angle = 0, scaleParam = 1, rescued = false) {
   push();
   stroke(0);
@@ -183,8 +201,8 @@ function drawAilen(x = 0, y = 0, angle = 0, scaleParam = 1, rescued = false) {
   pop();
 }
 
-
-function makeBody(angle) { //다리 그리기  
+// 외계인 다리 그리기
+function makeBody(angle) { 
   push();
   angleMode(DEGREES);
   translate(200,200);
@@ -202,6 +220,7 @@ function makeBody(angle) { //다리 그리기
   pop();
 }
 
+// 우주선 그리기
 function drawSpaceShip() {  
     push();
     stroke(3, 111, 252);
@@ -236,6 +255,7 @@ function drawSpaceShip() {
     pop();
 }
 
+// 새총 발사 동작
 function operateShot() {
 
   switch(stage) {
@@ -369,6 +389,7 @@ function operateShot() {
   }
 }
 
+// 클릭 시 stage 변환 및 적중 판정
 function mousePressed() {
   if (stage ==1 && mouseX >155 && mouseX <245 && mouseY > 270 && mouseY <360) {
     stage = 2;
@@ -377,11 +398,9 @@ function mousePressed() {
     stage = 2;
     onTarget = false;
   }
-  
-  console.log(mouseX, Math.round(mouseY));
-  navigator.clipboard.writeText(Math.round(mouseX) + ", " + Math.round(mouseY) + ", ");
 }
 
+// 초기화
 function reInit() {
   score=0;
   stage =0;
@@ -406,6 +425,7 @@ function reInit() {
   goRed = true;
 }
 
+// 초기화 이벤트 리스너
 function keyPressed() {
   if (key == 'r') {
     stage = 0;
