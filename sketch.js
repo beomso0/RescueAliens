@@ -23,6 +23,8 @@ let refugees = [];
 let stars_1 = [];
 let stars_2 = [];
 let lightA = 130;
+let startD = 30;
+let endD = 150;
 
 function preload() {
   myFont = loadFont('./BMEULJIROTTF.ttf');
@@ -109,6 +111,10 @@ function draw() {
     shipY += shipSpeed;
     shipSpeed += accel;
     accel += accel_2;
+    if (startD<90) {
+      startD += 1;
+      endD -= 1;
+    }
     lightA -= 4;
     pop();
 
@@ -260,7 +266,7 @@ function drawSpaceShip() {
     
     noStroke();
     fill(241, 255, 117,lightA);
-    arc(600,302, 800,180,30,150);
+    arc(600,302, 800,180,startD,endD);
 }
 
 // 새총 발사 동작
@@ -432,6 +438,8 @@ function reInit() {
   accel_2 = 0.0005;
   goRed = true;
   lightA = 130;
+  startD = 30;
+  endD = 150;
 }
 
 // 초기화 이벤트 리스너
